@@ -49,7 +49,8 @@ async def on_message(message):
         return
 
     # if the bot is mentioned by name in any channel
-    if (BOT_USER_ID in list(map(lambda u: u.id, message.mentions))):
+    if ((server_data[str(message.guild.id)]['vote_on_mention'] == True) and 
+        (BOT_USER_ID in list(map(lambda u: u.id, message.mentions)))):
         # add vote reactions
         await react_with_emoji(message)
         return
@@ -111,12 +112,39 @@ async def show(ctx):
 
     # build a list of channel mention objects and print a helpful message back to the user
     ch_name_list = '\n'.join(list(map(lambda ch: ch.mention, ch_list)))
-    ch_list_msg = ('I am currently watching the following from this server:\n'
-                    f'{ch_name_list}'
-                  )
 
-    await ctx.send(ch_list_msg)
+    # determine what the current vote-on-mention setting is
+    vom_setting = server_data[str(ctx.guild.id)]['vote_on_mention']
+    vom_msg = "yes"
+    if (vom_setting == False): vom_msg = "no"
 
+    full_msg = ('I am currently watching the following from this server:\n'
+                f'{ch_name_list}\n\n'
+                f'The vote-on-mention option is currently configured to **{vom_msg}**.'
+                )
+    
+
+
+    await ctx.send(full_msg)
+
+@bot.command(
+    help='Configure the bot to add vote reactions to messages in any channel that @ mentions the bot. Use "yes" or "no" as arguments.',
+    brief='Option to add vote reactions to any messages with @VoteBot',
+    name='vote-on-mention'
+)
+async def vote_on_mention(ctx, yesno):
+    global server_data
+    # determine user input
+    if (yesno.lower() == 'yes'):
+        server_data[str(ctx.guild.id)]['vote_on_mention'] = True
+        await ctx.send('Changed vote-on-mention option to "yes".')
+        write_config_to_file()
+    elif (yesno.lower() == 'no'):
+        server_data[str(ctx.guild.id)]['vote_on_mention'] = False
+        await ctx.send('Changed vote-on-mention option to "no".')
+        write_config_to_file()
+    else: 
+        await ctx.send('This command only accepts the words "yes" or "no".')
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -146,7 +174,6 @@ def read_config_from_file():
 
 def write_config_to_file():
     global server_data
-    # os.remove('server.json')
     try:
         with open('server.json', 'w') as file:
             json.dump(server_data, file)
@@ -159,6 +186,7 @@ def init_new_guild(guild):
     server_data[str(guild.id)] = {
         'watching': [],
         'config_channel': None,
+        'vote_on_mention': False,
         'emoji': {
             'up': def_up_emoji,
             'down': def_down_emoji
