@@ -7,10 +7,10 @@ VoteBot has a very simple premise: watch a single Discord channel for new messag
 For example, I use VoteBot in a server channel that revolves around server feedback (do users want a new role? a new text channel around a particular topic? etc). Anyone can suggest a new idea to implement on the server. As the mods and admins watch the reactions grow, they can quickly discern if an idea is overwhemingly desired, undesired, or contentious. They can then drive further conversation or just implement those ideas as they see fit.
 
 ## Table of Contents
-    * [Creating a VoteBot instance](#creating-a-votebot-instance)
-    * [Inviting VoteBot to your server](#inviting-votebot-to-your-server)
-    * [Configuring VoteBot](#configuring-votebot)
-    * [Developing new features](#developing-new-features)
+ * [Creating a VoteBot instance](#creating-a-votebot-instance)
+ * [Inviting VoteBot to your server](#inviting-votebot-to-your-server)
+ * [Configuring VoteBot](#configuring-votebot)
+ * [Developing new features](#developing-new-features)
 
 ## Creating a VoteBot instance
 Currently, you cannot invite VoteBot to your server directly. There are multiple reasons for this:
@@ -37,14 +37,15 @@ Once you have your server / computer / repl.it instance in place, let's get to a
 DISCORD_TOKEN=<paste your bot token here>
 ```
 (do not include spaces around the `=`)
+
 11) Save and exit the file.
 12) Go back to the computer that will be running VoteBot, and make sure that Python 3.7+ and pip3 are installed.
 13) From a terminal window, type `pip3 install discord.py`
 14) Again, type `pip3 install python-dotenv`
 15) Finally, to start the bot running, run `python3 votebot.py`.
-    * You should receive a message that says "VoteBot#1234 connected to Discord!"
-    * The first time you run the bot, you might see a message that there was an error reading a file. That's because the file doesn't exist yet. Don't worry, that file is `server.json` and will be created for you by the program. As long as you don't delete this file, you shouldn't see that error again.
-    * You will need to leave this process running for the bot to continue to operate. In order to kill the bot, just type `<CTRL-C>`. If you want to sign out of your computer but keep the process running, look into using `tmux` and creating, then detaching from sessions.
+ * You should receive a message that says "VoteBot#1234 connected to Discord!"
+ * The first time you run the bot, you might see a message that there was an error reading a file. That's because the file doesn't exist yet. Don't worry, that file is `server.json` and will be created for you by the program. As long as you don't delete this file, you shouldn't see that error again.
+ * You will need to leave this process running for the bot to continue to operate. In order to kill the bot, just type `<CTRL-C>`. If you want to sign out of your computer but keep the process running, look into using `tmux` and creating, then detaching from sessions.
 16) Congrats! You are ready to invite VoteBot to your server.
 
 Note: you will only have to do this once, and then you can invite VoteBot to as many servers as you'd like. VoteBot's code is flexible enough to handle being in multiple servers simultaneously.
@@ -63,29 +64,29 @@ Inviting VoteBot should be fairly straight-forward. After creating your VoteBot 
 VoteBot comes with a handful of features, all of which can be configured. VoteBot's prefix is `vb!`, which is used to avoid collision with other common Discord bots.
 
 ### VoteBot's features:
-    * Watching channels and adding upvote / downvote reactions to every message in that channel. _By default, **no channels** are watched_.
-    * Mentioning VoteBot's user in _any_ message, regardless of channel, will add upvote / downvote reactions to that message. _By default, this feature is turned **off**_.
-    * Configuring VoteBot can be done server-wide, or in one specific channel of that server. _By default, **all channels** can be used to configure VoteBot_. (It is **HIGHLY** recommended you restrict this to a single channel after inviting VoteBot to your server, ideally a channel that only mods and admins have access to, to prevent trolls from configuring VoteBot.)
-    * Custom server emojis can be used as upvotes / downvotes. _By default, VoteBot will use :arrow_up: and :arrow_down:_. (You can only use **custom server emotes local to the server VoteBot is a user in**. Attempting to use other Unicode emojis or emojis from other servers will result in an error)
+ * Watching channels and adding upvote / downvote reactions to every message in that channel. _By default, **no channels** are watched_.
+ * Mentioning VoteBot's user in _any_ message, regardless of channel, will add upvote / downvote reactions to that message. _By default, this feature is turned **off**_.
+ * Configuring VoteBot can be done server-wide, or in one specific channel of that server. _By default, **all channels** can be used to configure VoteBot_. (It is **HIGHLY** recommended you restrict this to a single channel after inviting VoteBot to your server, ideally a channel that only mods and admins have access to, to prevent trolls from configuring VoteBot.)
+ * Custom server emojis can be used as upvotes / downvotes. _By default, VoteBot will use :arrow_up: and :arrow_down:_. (You can only use **custom server emotes local to the server VoteBot is a user in**. Attempting to use other Unicode emojis or emojis from other servers will result in an error)
 
 ### VoteBot Commands:
 (NOTE: `<channel_mention>` must be a valid channel within the server; it's easiest to do this by typing a hashtag, and then the channel name `#channel-name`. Discord will automatically format this into a channel mention for you.)
-    * `vb!help`: Displays a helpful prompt with this list of commands in a Discord message
-    * `vb!show`: Displays all of the currently configured options.
-    * `vb!watch <channel_mention>`: Start watching a channel and adding emojis to every message posted. 
-    * `vb!unwatch <channel_mention>`: Stop watching a channel.
-    * `vb!vote-on-mention <decision>`: Enable or disable adding emojis to any message in the server that mentions VoteBot's user. `<decision>` must be either the value `yes` or `no`.
-    * `vb!upd-conf-channel <channel_mention>`: Set or update the channel used to configure VoteBot. After running this, only the channel mentioned will be used to configure VoteBot, and any commands with the `vb!` prefix will be ignored unless posted in the configured channel.
-    * `vb!clr-conf-channel`: Removes any configured channel and returns VoteBot to a state of listening for configuration commands (`vb!` commands) in **every channel in the server.**
-    * `vb!use-custom-emoji <upordown> <emoji>`: Sets a custom, local server emoji to be the reaction used for either upvotes or downvotes. `<upordown>` must either be the value `up` or `down`. `<emoji>` must be a valid emoji mention (i.e. `:EMOJI_NAME:`).
-    * `vb!del-custom-emoji <upordown>`: Returns VoteBot to using the default Unicode emojis :arrow_up: and :arrow_down: for the specified reaction. `<upordown>` must either be the value `up` or `down`.
+ * `vb!help`: Displays a helpful prompt with this list of commands in a Discord message
+ * `vb!show`: Displays all of the currently configured options.
+ * `vb!watch <channel_mention>`: Start watching a channel and adding emojis to every message posted. 
+ * `vb!unwatch <channel_mention>`: Stop watching a channel.
+ * `vb!vote-on-mention <decision>`: Enable or disable adding emojis to any message in the server that mentions VoteBot's user. `<decision>` must be either the value `yes` or `no`.
+ * `vb!upd-conf-channel <channel_mention>`: Set or update the channel used to configure VoteBot. After running this, only the channel mentioned will be used to configure VoteBot, and any commands with the `vb!` prefix will be ignored unless posted in the configured channel.
+ * `vb!clr-conf-channel`: Removes any configured channel and returns VoteBot to a state of listening for configuration commands (`vb!` commands) in **every channel in the server.**
+ * `vb!use-custom-emoji <upordown> <emoji>`: Sets a custom, local server emoji to be the reaction used for either upvotes or downvotes. `<upordown>` must either be the value `up` or `down`. `<emoji>` must be a valid emoji mention (i.e. `:EMOJI_NAME:`).
+ * `vb!del-custom-emoji <upordown>`: Returns VoteBot to using the default Unicode emojis :arrow_up: and :arrow_down: for the specified reaction. `<upordown>` must either be the value `up` or `down`.
 
 ## Developing new features
 In order to contribute to this body of code (thank you!), please fork this repository, make the changes desired, and then create a pull-request back to this repository. I'll try to review the pull-request in a timely manner and give feedback. You will need:
-    * Python 3.7 (or greater)
-    * pip3
-    * `pip3 install discord.py`
-    * `pip3 install python-dotenv`
+ * Python 3.7 (or greater)
+ * pip3
+ * `pip3 install discord.py`
+ * `pip3 install python-dotenv`
 
 (COMING SOON: an easier way to set up a development environment).
 
@@ -96,7 +97,7 @@ To run the bot locally, just do the same as before: `python3 votebot.py`. You mu
 If you'd like to suggest new features but don't want / know how to code them, please create a new issue on this repository so we can work on it!
 
 Here is a list of helpful development resources:
-    * [General Discord API](https://discordpy.readthedocs.io/en/stable/api.html)
-    * [Discord ext.commands API](https://discordpy.readthedocs.io/en/stable/ext/commands/api.html)
-    * [Discord Cogs](https://discordpy.readthedocs.io/en/stable/ext/commands/cogs.html)
-    * [Python 3](https://docs.python.org/3/library/)
+ * [General Discord API](https://discordpy.readthedocs.io/en/stable/api.html)
+ * [Discord ext.commands API](https://discordpy.readthedocs.io/en/stable/ext/commands/api.html)
+ * [Discord Cogs](https://discordpy.readthedocs.io/en/stable/ext/commands/cogs.html)
+ * [Python 3](https://docs.python.org/3/library/)
